@@ -1,7 +1,17 @@
 #!/home/mariaharris/.conda/envs/my-rdkit-env/bin/python
 
 """
-This script blabla
+Runs RMSD-PP calculations to get a TS guess structure and barrier estimate for the reaction defined
+by the input reactant and product structures. 
+
+The RMSD-PP procedure is part of the xTB program and described in
+
+    Stefan Grimme
+    "Exploration of Chemical Compound, Conformer, and
+    Reaction Space with Meta-Dynamics Simulations Based on Tight-Binding
+    Quantum Chemical Calculations"
+    J. Chem. Theory Comput. 2019, Vol. 15, 2847-2862
+    DOI: 10.1021/acs.jctc.9b00143
 """
 
 
@@ -41,7 +51,7 @@ def check_if_reaction_complete(out_file):
     From xtb path calculation where three runs have been done. Based on the
     RMSE between end structure and target structure it is determined whether
     the reaction has been completed.
-    Returns list of "True" and "False" for the three rections depending on
+    Returns list of "True" and "False" for the three reactions depending on
     whether the reacion was finished or not, respectively.
     """
     barriers = []
@@ -789,8 +799,8 @@ def find_xtb_path(reactant_file, product_file):
     """
     Find an xtb path combining the reactant and product file
     """
-    kpush_list = [-0.02, -0.02, -0.02, -0.03, -0.03, -0.04]
-    alp_list = [0.6, 0.3, 0.3, 0.6, 0.6, 0.6]
+    kpush_list = [-0.02, -0.02, -0.02, -0.03, -0.03]
+    alp_list = [0.6, 0.3, 0.3, 0.6, 0.6]
     output_list = try_xtb_path(reactant_file, product_file, 0.008,  #change initial push to lower
                                kpush_list[0], alp_list[0])
     i = 1
@@ -830,7 +840,6 @@ def xtb_path_parameter(n_path, out_file, _dict):
                   np.float(k_push_pull[5])})
     return _dict
 
-    #print(push_pull_list[n_path])
 
 
 def find_dft_max_structure(method):
@@ -946,11 +955,6 @@ if __name__ == '__main__':
     LG.setLevel(RDLogger.ERROR)
 
 
-#    with open("xtb_max.txt", 'w') as out:
-#        with redirect_stdout(out):
-#            JOBIDS = submit_xtb_sp("path")
-#            wait_for_jobs_to_finish(JOBIDS)
-#            find_xtb_max_from_sp_extrapolation("path")
     with open("log_err.txt", 'w') as err:
         with redirect_stderr(err):
             with open("log.txt", 'w') as out:
