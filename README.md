@@ -1,9 +1,30 @@
 # RMSD_PP_TS
 Locate TS based on RMSD-PP method
 
+## Usage
+To run a TS search  
+* Create dataframes and save them as .pkl to store the results of succesful runs (```success.pkl```) and failed runs (```fail.pkl```)
+* Create folder to run the calculations (e.g. ```mkdir test_run```)
+* The following files should be present in the created folder
+  * ```path.inp``` containing parameters defining the RMSD-PP run
+  * ```reaction.xyz``` containing the geometry of the reactant
+  * ```product.xyz``` containing the geometry of the product
+
+The run can now be initiated from within the ```test_run``` folder by:
+```
+rmsd_pp_ts.py reactant.xyz product.xyz success.pkl fail.pkl
+```
+
+
 ## Depency on external programs
 The procedure relies on external programs to do the quantum chemical calculations. 
 In particular, there are calls to four different submit scripts (submitting xTB and Gaussian16 calculations) within rmsd_pp_ts.py:
+
+### xyz2mol
+```xyz2mol``` is used to calculate adjacancy matrices and SMILES from .xyz files  
+```
+https://github.com/jensengroup/xyz2mol
+```
 
 
 ### submit_xtb_path:
