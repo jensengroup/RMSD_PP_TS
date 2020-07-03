@@ -1,0 +1,60 @@
+#!/bin/bash
+
+IN=$1
+
+if [ ${IN: -4} == ".com" ];
+        then :;
+        else echo " ${IN} is not an .com file"; exit;
+fi
+
+
+
+# get the filename without the extension
+JOB=${IN%.*}
+
+PARTITION=shortcoms # sauer or coms or teach
+TIME=100:00:00
+
+SUBMIT=qsub.tmp
+
+PWD=`pwd`
+
+NCPUS=4
+MEM=16GB
+
+echo 'NCPUS' $NCPUS
+echo 'MEM' $MEM
+
+
+
+cat > $SUBMIT <<!EOF
+#!/bin/sh
+#SBATCH --job-name=$JOB
+#SBATCH --cpus-per-task=$NCPUS
+#SBATCH --ntasks=1
+#SBATCH --error=$PWD/$JOB\_%j.err
+#SBATCH --output=$PWD/$JOB\_%j.out
+#SBATCH --time=$TIME
+#SBATCH --partition=$PARTITION
+#SBATCH --no-requeue
+#SBATCH --mem=$MEM
+
+# Create scratch folder
+mkdir /scratch/\$SLURM_JOB_ID
+
+cd $PWD
+
+export GAUSS_SCRDIR=/scratch/\$SLURM_JOB_ID
+export GAUSS_EXEDIR=/opt/gaussian/g16/legacy/g16
+
+srun /opt/gaussian/g16/legacy/g16/g16 < $JOB.com > $JOB.out
+
+# Remove scratch folder
+rm -rf /scratch/\$SLURM_JOB_ID
+
+!EOF
+
+sbatch $SUBMIT
+
+# MEM=1gb
+#SBATCH --mem=$MEM

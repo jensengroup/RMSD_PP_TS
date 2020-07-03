@@ -1,0 +1,65 @@
+#!/bin/bash
+
+REACTANT=$1
+PRODUCT=$2
+KPUSH=$3
+KPULL=$4
+ALP=$5
+#OUTFILE=$3
+
+# get the filename without the extension
+JOB=${REACTANT%.*}_${PRODUCT%.*}
+
+
+PARTITION=mko 
+TIME=100:00:00
+
+SUBMIT=qsub.tmp
+
+mkdir $JOB
+cp path.inp $JOB
+cp $REACTANT $JOB
+cp $PRODUCT $JOB
+PWD=`pwd`
+
+
+NCPUS=1
+MEM=6gb
+
+
+cat > $SUBMIT <<!EOF
+#!/bin/sh
+#SBATCH --job-name=$JOB
+#SBATCH --cpus-per-task=$NCPUS
+#SBATCH --mem=$MEM
+#SBATCH --ntasks=1
+#SBATCH --error=$PWD/$OUT/$JOB\_%j.err
+#SBATCH --output=$PWD/$OUT/$JOB\_%j.out
+#SBATCH --time=$TIME
+#SBATCH --partition=$PARTITION
+#SBATCH --no-requeue
+
+cd $JOB
+# Create scratch folder
+mkdir /scratch/\$SLURM_JOB_ID
+
+export XTBHOME=/opt/xtb/6.1/xtb-190527/bin
+
+
+export OMP_NUM_THREADS=$NCPUS
+
+sed -i "s/kpush=/kpush=$KPUSH/g" path.inp
+sed -i "s/kpull=/kpull=$KPULL/g" path.inp
+sed -i "s/product=/product=$PRODUCT/g" path.inp
+sed -i "s/alp=/alp=$ALP/g" path.inp
+/opt/xtb/6.1/xtb-190527/bin/xtb $REACTANT --path --input path.inp --gfn2 --chrg 0 > $JOB.out
+
+cd ..
+
+# Remove scratch folder
+rm -rf /scratch/\$SLURM_JOB_ID
+
+!EOF
+
+sbatch $SUBMIT
+
