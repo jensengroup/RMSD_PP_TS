@@ -39,6 +39,9 @@ def submit_xtb_path_calculation(reactant_xyz, product_xyz, k_push, k_pull, alp):
     This function submits an xtb path job from reactant_xyz to product_xyz
     using the given k_pull, k_push and alpha values. The "path.inp" file should
     be in the current directory.
+    It relies on the use of 'submit_xtb_path', which is a bash submit script
+    calling the xTB program and submits it to slurm which returns a jobid which
+    can be used to monitor the job.
     """
     jobid = os.popen('submit_xtb_path ' + reactant_xyz + ' ' + product_xyz + \
     ' ' + str(k_push) + ' ' + str(k_pull) + ' ' + str(alp)).read()
@@ -129,15 +132,14 @@ def get_relaxed_xtb_structure(xyz_path, new_file_name):
 
 def extract_xtb_structures(path_file):
     """
-    Based on the structure path predicted by xtb: do xtb single point energies
-    for each structure
+    Extract the structures of the path calculated by xtb and save them in a
+    directory to be submitted to single point calculations (xtb_sp)
     """
 
     dat_file = path_file[:-6]+'.dat'
     n_run = int(path_file[-5])
     os.mkdir("xtb_sp")
     xtb_coordinates = []
-    xtb_path_energies = []
     with open(path_file, 'r') as _file:
         line = _file.readline()
         n_lines = int(line.split()[0])+2
@@ -152,8 +154,6 @@ def extract_xtb_structures(path_file):
         data = line.split()
         coordinate = np.float(data[0])
         xtb_coordinates.append(coordinate)
-        energy = np.float(data[1])
-        xtb_path_energies.append(energy)
 
     count = 0
     indx = 0
@@ -169,7 +169,7 @@ def extract_xtb_structures(path_file):
             count += 1
         dest.close()
 
-    return xtb_coordinates, xtb_path_energies
+    return xtb_coordinates
 
 
 
@@ -177,6 +177,9 @@ def submit_xtb_sp(directory):
     """
     submits all .xyz files in directory and calculates single point energies
     using xtb.
+    It relies on the existence of the bash submit script 'submit_batches_xtb'
+    which submits a batch of single-point energy calculations to the xTB
+    program to slurm, returning a jobid which can be used to monitor the job.
     """
     os.chdir(directory)
     jobid = os.popen('submit_batches_xtb').read()
@@ -215,7 +218,7 @@ def get_coordinates(structure_files_list):
 
 
 
-def make_sp_extrapolation(atom_numbers_list, coordinates_list, n_atoms, n_points):
+def make_sp_interpolation(atom_numbers_list, coordinates_list, n_atoms, n_points):
     """
     From the given structures in coordinates_list xyz files are created by
     extrapolating between those structures with n_points between each structure
@@ -245,7 +248,6 @@ def make_gaussian_sp(xyz_file, method):
     """
     This function prepares a Gaussiam input file for a single point
     calculation with method B3LYP/6-31G(d,p)
-    TODO make method non-hardcoded
     """
     com_file = xyz_file[:-4]+'_sp.com'
     with open(com_file, 'w') as _file:
@@ -265,6 +267,11 @@ def make_gaussian_sp(xyz_file, method):
 def submit_gaussian_sp(directory, method):
     """
     make sp com files on all files on directory
+    It relies on the existence of the bash submit script
+    'submit_batches_gaussian', which submits a batch of single-point energy
+    calculations to the Gaussian16 program to slurm, returning a jobid which can be used
+    to monitor the job.
+
     """
     os.chdir(directory)
     files = os.listdir(os.curdir)
@@ -304,7 +311,7 @@ def plot_path(x_list, y_list, _color, _label, x_label):
     plt.legend()
 
 
-def find_xtb_max_from_sp_extrapolation(directory, extract_max_structures):
+def find_xtb_max_from_sp_interpolation(directory, extract_max_structures):
     """
     when sp calculations ar efinished: find the structure with maximum xtb
     energy
@@ -347,7 +354,7 @@ def find_xtb_max_from_sp_extrapolation(directory, extract_max_structures):
     os.chdir("../")
     return max(energies), energies_kcal, max_index
 
-def find_dft_max_from_sp_extrapolation(directory):
+def find_dft_max_from_sp_interpolation(directory):
     """
     When the sp calculations are finished: find the structure with maximum
     energy to prepare for a TS calculation
@@ -378,7 +385,7 @@ def find_dft_max_from_sp_extrapolation(directory):
                 line = _file.readline()
         energies.append(energy_au)
         os.remove(file_name)
-    print("Max DFT energy from sp extrapolation = "+str(max(energies)))
+    print("Max DFT energy from sp interpolation = "+str(max(energies)))
     max_index = energies.index(max(energies))
     max_point = path_points[max_index]
     ts_test_file = str(directory)+"/path_point_"+str(max_point)+".xyz"
@@ -428,11 +435,12 @@ def find_bonds_getting_formed_or_broken(reaction_structure, product_structure):
 
 
 def make_gaussian_constrained_opt(xyz_file, bond_pairs_changed,
-        method):
+                                  method):
     """
     This function prepares a Gaussian input file for a constrained
     optimization freezing the bonds broken or created during the reaction.
-    TODO make method choices arguments and charge+spin
+    The .com file is submitted to slurm using 'submit_gaus16' which returns a
+    jobid used to monitor the job
     """
     n_frozen_bonds = len(bond_pairs_changed)
     com_file = xyz_file[:-4]+'_opt.com'
@@ -442,7 +450,7 @@ def make_gaussian_constrained_opt(xyz_file, bond_pairs_changed,
         _file.write('#opt '+str(method)+' geom(modredundant, gic) ')
         _file.write('scf=(maxcycles=1024)'+'\n\n')
         _file.write('something title'+'\n\n')
-        _file.write('0 1'+'\n')
+        _file.write('0 1'+'\n') #hardcoded to neutral singlet, change if needed
         with open(xyz_file, 'r') as file_in:
             lines = file_in.readlines()
             lines = lines[2:]
@@ -521,18 +529,18 @@ def check_imaginary_frequencies(frequency_list, vibration_matrices,
             bond_matrices.append(transition_matrix)
 
         for i in range(n_imag_freqs):
-            if i==0:
+            if i == 0:
                 lowest_freq_active = 0
             print("transition: "+str(i+1))
             frequency_vector = np.ravel(vibration_matrices[i])
-            for j in range(len(bond_matrices)):
-                transition_vector = np.ravel(bond_matrices[j])
+            for count, bond_matrix in enumerate(bond_matrices):
+                transition_vector = np.ravel(bond_matrix)
                 overlap = \
                 (transition_vector/np.linalg.norm(transition_vector)) @ frequency_vector
-                print(bond_breaking_pairs[j], overlap)
+                print(bond_breaking_pairs[count], overlap)
                 if abs(overlap) > 0.33:
                     print("Vibration along the bond")
-                    if i==0:
+                    if i == 0:
                         lowest_freq_active += 1
                 else:
                     print("Vibration not along bond")
@@ -556,7 +564,7 @@ def extract_optimized_structure(out_file, n_atoms, atom_labels):
             if 'SCF Done:' in line:
                 optimized_energy = line.split()[4]
             if 'Standard orientation' in line or 'Input orientation' in line:
-                coordinates = np.zeros((n_atoms, 3)) 
+                coordinates = np.zeros((n_atoms, 3))
                 for i in range(5):
                     line = ofile.readline()
                 for i in range(n_atoms):
@@ -579,6 +587,8 @@ def do_freq_calculation(xyz_file, method):
     """
     This script sets up a Gaussian frequency calculation using the structure
     specified in xyz_file.
+    submits the .com file created using the bash submit script 'submit_gaus16'
+    to slurm which returns a jobid used to monitor the job.
     """
     com_file = xyz_file[:-4]+'_freq.com'
     with open(com_file, 'w') as _file:
@@ -587,7 +597,7 @@ def do_freq_calculation(xyz_file, method):
         _file.write('#freq '+str(method)+' ')
         _file.write('scf=(maxcycles=1024)'+'\n\n')
         _file.write('something title'+'\n\n')
-        _file.write('0 1'+'\n')
+        _file.write('0 1'+'\n') #hardcoded to neutral singlet - change if needed
         with open(xyz_file, 'r') as file_in:
             lines = file_in.readlines()
             lines = lines[2:]
@@ -605,6 +615,8 @@ def do_gaussian_ts_calculation(ts_guess_xyz, method):
     """
     This script sets up a Gaussian TS calculation using the constrained
     optimized structure.
+    submits the .com file created using the bash submit script 'submit_gaus16'
+    to slurm which returns a jobid used to monitor the job.
     """
     com_file = ts_guess_xyz[:-4]+'_ts.com'
     with open(com_file, 'w') as _file:
@@ -635,7 +647,7 @@ def fast_ts_check(ts_file, vibrations, coordinates, atom_labels, method):
     file_names = [ts_file[:-4]+'_fast_forward.com', ts_file[:-4]+'_fast_reverse.com']
     forward_coordinates = coordinates+0.2*vibrations[0]
     reverse_coordinates = coordinates-0.2*vibrations[0]
-    for file_name, coordinates in zip(file_names, [forward_coordinates, \
+    for file_name, coord in zip(file_names, [forward_coordinates, \
             reverse_coordinates]):
         with open(file_name, 'w') as _file:
             _file.write('%mem=16GB'+'\n')
@@ -643,11 +655,11 @@ def fast_ts_check(ts_file, vibrations, coordinates, atom_labels, method):
             _file.write('#opt freq '+str(method)+' ')
             _file.write('scf=(maxcycles=1024)'+'\n\n')
             _file.write('something title'+'\n\n')
-            _file.write('0 1'+'\n')
-            for i in range(len(atom_labels)):
-                _file.write(atom_labels[i])
+            _file.write('0 1'+'\n') #hardcoded to neutral singlet - change if needed
+            for count, atom_label in enumerate(atom_labels):
+                _file.write(atom_label)
                 for j in range(3):
-                    _file.write(' '+"{:.5f}".format(coordinates[i,j]))
+                    _file.write(' '+"{:.5f}".format(coord[count, j]))
                 _file.write('\n')
             _file.write('\n')
 
@@ -665,8 +677,11 @@ def fast_ts_check(ts_file, vibrations, coordinates, atom_labels, method):
 
 def make_irc(ts_test_file, method, direction):
     """
-    After TS calculation finishes: do an IRC on the optimized TS structure to see
+    After TS calculation finishes: do an IRC on the optimized TS structure in
+    the specified direction (forward or reverse) to see
     if it creates correct reactant and product structures.
+    submits the .com file created using the bash submit script 'submit_gaus16'
+    to slurm which returns a jobid used to monitor the job.
     """
     irc_file = ts_test_file[:-4]+'_'+direction+'_irc.com'
     with open(irc_file, 'w') as _file:
@@ -675,7 +690,7 @@ def make_irc(ts_test_file, method, direction):
         _file.write('#irc=('+direction+' calcfc, maxpoint=100, stepsize=5) '+str(method)+' ')
         _file.write('scf=(maxcycles=1024)'+'\n\n')
         _file.write('something title'+'\n\n')
-        _file.write('0 1'+'\n')
+        _file.write('0 1'+'\n') #hardcoded to neutral singlet - change if needed
         with open(ts_test_file, 'r') as file_in:
             lines = file_in.readlines()
             lines = lines[2:]
@@ -694,6 +709,9 @@ def optimize_endpoint(xyz_file, n_atoms, atom_labels, method):
     After the IRC finishes: compare the resulting reactant and product
     structure with the original reactant and product structures
     Use xyz2mol in order to compare the smiles
+    submits the .com file created using the bash submit script 'submit_gaus16'
+    to slurm which returns a jobid used to monitor the job.
+
     """
     com_file = xyz_file[:-4]+'_opt.com'
     with open(com_file, 'w') as _file:
@@ -702,7 +720,7 @@ def optimize_endpoint(xyz_file, n_atoms, atom_labels, method):
         _file.write('# opt freq '+str(method)+' ')
         _file.write('scf=(maxcycles=1024)'+'\n\n')
         _file.write('something title'+'\n\n')
-        _file.write('0 1'+'\n')
+        _file.write('0 1'+'\n') #hardcoded as neutral singlet - change if needed
         with open(xyz_file, 'r') as file_in:
             lines = file_in.readlines()
             lines = lines[2:]
@@ -830,7 +848,6 @@ def xtb_path_parameter(n_path, out_file, _dict):
         while line:
             if 'Gaussian width (1/Bohr)' in line:
                 alp = line.split()[4]
-                #print("alp = "+alp)
                 _dict.update({"ALP [1/a0]" : alp})
             if 'actual k push/pull :' in line:
                 push_pull_list.append(line)
@@ -845,7 +862,7 @@ def xtb_path_parameter(n_path, out_file, _dict):
 def find_dft_max_structure(method):
     """
     Once an xtb path has been calculated the xTB guess is refined with an
-    extrapolation around the xtb max using the method specified in 'method'.
+    interpolation around the xtb max using the method specified in 'method'.
     The maximum of this path is used in the search for a TS.
     """
     files_list = ['max_structure-1.xyz', 'max_structure.xyz',
@@ -853,19 +870,21 @@ def find_dft_max_structure(method):
     atom_numbers, coordinates_list, n_atoms =\
     get_coordinates(files_list)
     n_points = 10
-    make_sp_extrapolation(atom_numbers, coordinates_list, n_atoms, n_points)
+    make_sp_interpolation(atom_numbers, coordinates_list, n_atoms, n_points)
     job_ids = submit_gaussian_sp("path", method)
     wait_for_jobs_to_finish(job_ids)
-    sp_max_file, sp_dft_energies = find_dft_max_from_sp_extrapolation("path")
+    sp_max_file, sp_dft_energies = find_dft_max_from_sp_interpolation("path")
     return sp_max_file, sp_dft_energies, n_atoms, atom_numbers
 
 def find_ts_structure(ts_guess_xyz_path, reactant_file, product_file, \
-        bond_pairs_changed, method, n_atoms, atom_numbers):
+                      bond_pairs_changed, method, n_atoms, atom_numbers):
     """
     Once an xtb path has been calculated the xtb guess is refined and used as
     starting guess in DFT TS berny optimization and tested through an IRC.
     """
     _dict = {}
+
+    #check bond activity requirement of ts guess structure
     bond_activity = check_activity_of_bonds(ts_guess_xyz_path, bond_pairs_changed)
     print(bond_activity)
     _dict.update({"Bond active in guess": any(bond_activity)})
@@ -874,13 +893,18 @@ def find_ts_structure(ts_guess_xyz_path, reactant_file, product_file, \
         shutil.copyfile(ts_guess_xyz_path, "ts_test/"+ts_guess_xyz)
     except shutil.SameFileError:
         print("file already there")
+    #create directory to do DFT TS calculations
     os.chdir("ts_test")
+
+    #Calculate vibratins of TS guess and do TS optimization
     freq_outfile, job_id1 = do_freq_calculation(ts_guess_xyz,
                                                 method)
     ts_out_file, job_id2 = \
     do_gaussian_ts_calculation(ts_guess_xyz, method)
     job_ids = job_id1|job_id2
     wait_for_jobs_to_finish(job_ids)
+
+    #analyze vibrations in TS guess
     frequencies, vibrations, coordinates = get_frequencies(freq_outfile, n_atoms)
     n_imag_freqs_guess, lowest_vibration_active_guess = \
     check_imaginary_frequencies(frequencies, vibrations, bond_pairs_changed,
@@ -888,6 +912,8 @@ def find_ts_structure(ts_guess_xyz_path, reactant_file, product_file, \
     _dict.update({"N_imag_guess": n_imag_freqs_guess})
     _dict.update({"# of bonds along lowest vibration in guess": \
         lowest_vibration_active_guess})
+
+    #analyze energy and vibrations in TS structure
     ts_xyz_file, ts_energy = extract_optimized_structure(ts_out_file, n_atoms,
                                                          atom_numbers[0])
     _dict.update({"TS Energy [Hartree]": ts_energy})
@@ -900,19 +926,28 @@ def find_ts_structure(ts_guess_xyz_path, reactant_file, product_file, \
     _dict.update({"N_imag_ts": n_imag_freqs_ts})
     _dict.update({"# of bonds along lowest vibration in TS": \
         lowest_vibration_active_ts})
-    fast_check_files, job_ids = fast_ts_check(ts_xyz_file, vibrations, coordinates,
-                                              atom_numbers[0], method)
+
     bond_activity = check_activity_of_bonds(ts_xyz_file, bond_pairs_changed)
     print(bond_activity)
     _dict.update({"Bond active in ts": any(bond_activity)})
+
+    #Do a fast check of TS (step once in each direction if vibration and optimize)
+    fast_check_files, job_ids = fast_ts_check(ts_xyz_file, vibrations, coordinates,
+                                              atom_numbers[0], method)
+
+    #Calculate IRC in both directions
     irc_for_out_file, job_id = make_irc(ts_xyz_file, method, 'forward')
     irc_rev_out_file, job_id2 = make_irc(ts_xyz_file, method, 'reverse')
     job_ids = job_ids|job_id|job_id2
     wait_for_jobs_to_finish(job_ids)
+
+    #check the "fast test" structures 
     print("checking fast ts check:")
     ts_found = is_ts_correct('../'+reactant_file, '../'+product_file, fast_check_files[0],
                              fast_check_files[1], n_atoms, atom_numbers[0])
     _dict.update({"Fast test": ts_found})
+
+    #extract and test the IRC endpoint structures
     irc_for_xyz_file, _ = extract_optimized_structure(irc_for_out_file,
                                                       n_atoms, atom_numbers[0])
     irc_rev_xyz_file, _ = extract_optimized_structure(irc_rev_out_file,
@@ -920,17 +955,19 @@ def find_ts_structure(ts_guess_xyz_path, reactant_file, product_file, \
     print("Checking IRC endpoints:")
     try:
         ts_found = is_ts_correct('../'+reactant_file, '../'+product_file,
-                irc_for_out_file, irc_rev_out_file, n_atoms, atom_numbers[0])
+                                 irc_for_out_file, irc_rev_out_file, n_atoms, atom_numbers[0])
     except UnboundLocalError:
         print("something wrong with IRC")
         ts_found = None
     _dict.update({"IRC endpoint test": ts_found})
 
+    #Optimize IRC endpoint structures
     irc_for_opt_out, jobid = optimize_endpoint(irc_for_xyz_file, n_atoms, atom_numbers[0], method)
     irc_rev_opt_out, jobid2 = optimize_endpoint(irc_rev_xyz_file, n_atoms, atom_numbers[0], method)
     jobids = jobid|jobid2
     wait_for_jobs_to_finish(jobids)
 
+    #check optimized IRC enpoint structures
     print("checking real IRC:")
     extract_optimized_structure(irc_for_opt_out, n_atoms, atom_numbers[0])
     extract_optimized_structure(irc_rev_opt_out, n_atoms, atom_numbers[0])
@@ -944,13 +981,14 @@ def find_ts_structure(ts_guess_xyz_path, reactant_file, product_file, \
 
 
     return _dict, ts_found_opt, ts_found
-if __name__ == '__main__':
-    FILE_1 = sys.argv[1]
-    FILE_2 = sys.argv[2]
-    SUCCESS_PKL = sys.argv[3]
-    FAIL_PKL = sys.argv[4]
-    METHOD = 'ub3lyp/6-31G(d,p)'
 
+
+if __name__ == '__main__':
+    FILE_1 = sys.argv[1] #reactant .xyz file
+    FILE_2 = sys.argv[2] #product .xyz file
+    SUCCESS_PKL = sys.argv[3] #.pkl file with dataframe to save result if search successful
+    FAIL_PKL = sys.argv[4] #.pkl faile with daraframe to save result if search unsuccessful
+    METHOD = 'ub3lyp/6-31G(d,p)' #Specify the method for the Gaussian calculations
     LG = RDLogger.logger()
     LG.setLevel(RDLogger.ERROR)
 
@@ -959,43 +997,48 @@ if __name__ == '__main__':
         with redirect_stderr(err):
             with open("log.txt", 'w') as out:
                 with redirect_stdout(out):
+                    # create empty dictionary to save results
                     DICT = {}
+
+                    #Get the xTB path for reactant and product
                     PATH_FILE, OUTFILE, N_PATH = find_xtb_path(FILE_1, FILE_2)
                     DICT = xtb_path_parameter(N_PATH, OUTFILE, DICT)
-                    XTB_COORDINATES, XTB_PATH_ENERGIES = extract_xtb_structures(PATH_FILE)
+
+                    #extract path structures and do sp energy calculations
+                    XTB_COORDINATES = extract_xtb_structures(PATH_FILE)
                     JOBIDS = submit_xtb_sp("xtb_sp")
                     wait_for_jobs_to_finish(JOBIDS)
-                    MAX_ENERGY_SP, XTB_SP_ENERGIES_KCAL, _ = \
-                            find_xtb_max_from_sp_extrapolation("xtb_sp", True)
 
+                    #find maximum energy along path (xTB)
+                    MAX_ENERGY_SP, XTB_SP_ENERGIES_KCAL, _ = \
+                            find_xtb_max_from_sp_interpolation("xtb_sp", True)
+
+                    #plot xTB path
                     plot_path(XTB_COORDINATES, XTB_SP_ENERGIES_KCAL, 'indigo',
                               'xTB SP', 'Path length [a$_0$]')
                     plt.savefig('xtb_sp_path.pdf')
-                    plot_path(XTB_COORDINATES, XTB_PATH_ENERGIES,
-                              'mediumvioletred', 'xTB PATH', 'Path length [a$_0$]')
-                    plt.savefig('xtb_sp+path.pdf')
-                    plt.clf()
-                    plot_path(XTB_COORDINATES, XTB_PATH_ENERGIES,
-                              'mediumvioletred', 'xTB PATH', 'Path length [a$_0$]')
-                    plt.savefig('xtb_path.pdf')
                     plt.clf()
 
+                    #Find bonds getting broken or formed during reaction
                     BOND_PAIRS_CHANGED = find_bonds_getting_formed_or_broken(FILE_1,
                                                                              FILE_2)
                     SP_MAX_XYZ, SP_DFT_ENERGIES, N_ATOMS, ATOM_NUMBERS = find_dft_max_structure(METHOD)
                     JOBIDS = submit_xtb_sp("path")
                     wait_for_jobs_to_finish(JOBIDS)
-                    MAX_XTB_ENERGY, XTB_SP_ENERGIES_KCAL, MAX_INDEX = find_xtb_max_from_sp_extrapolation("path", False)
+                    MAX_XTB_ENERGY, XTB_SP_ENERGIES_KCAL, MAX_INDEX = find_xtb_max_from_sp_interpolation("path", False)
                     DICT.update({"xTB max [Hartree]" : MAX_XTB_ENERGY})
                     DICT.update({"DFT SP Max [Hartree]": max(SP_DFT_ENERGIES)})
+                    #compare max DFT and xTB structures of the interpolation
                     XTB_EQ_DFT_MAX = MAX_INDEX == SP_DFT_ENERGIES.index(max(SP_DFT_ENERGIES))
                     DICT.update({"DFT + xTB index same": XTB_EQ_DFT_MAX})
                     DICT.update({"index dif": \
                         MAX_INDEX-SP_DFT_ENERGIES.index(max(SP_DFT_ENERGIES))})
                     print(DICT)
+
+                    #plot the xTB and DFT interpolations
                     plot_path(np.arange(-10, 11, 1), XTB_SP_ENERGIES_KCAL,
                               'indigo', 'xTB SP', 'Path point')
-                    plt.savefig('xtb_extrapolation.pdf')
+                    plt.savefig('xtb_interpolation.pdf')
                     DFT_SP_ENERGIES_KCAL = \
                     (np.array(SP_DFT_ENERGIES)-SP_DFT_ENERGIES[0])*627.509
                     plot_path(np.arange(-10, 11, 1), DFT_SP_ENERGIES_KCAL,
@@ -1004,49 +1047,73 @@ if __name__ == '__main__':
                     plt.clf()
                     plot_path(np.arange(-10, 11, 1), DFT_SP_ENERGIES_KCAL,
                               'orange', 'DFT SP', 'Path point')
-                    plt.savefig('dft_extrapolation.pdf')
+                    plt.savefig('dft_interpolation.pdf')
+
+                    #search for TS and validate with IRC
                     os.mkdir('ts_test')
                     DICT_NOOPT, TS_FOUND1, TS_FOUND2 =\
-                        find_ts_structure(SP_MAX_XYZ, FILE_1, FILE_2, BOND_PAIRS_CHANGED, 
+                        find_ts_structure(SP_MAX_XYZ, FILE_1, FILE_2, BOND_PAIRS_CHANGED,
                                           METHOD, N_ATOMS, ATOM_NUMBERS)
                     os.chdir('../')
                     DICT_NOOPT.update(DICT)
                     print(DICT_NOOPT)
+
+                    #Get reaction index from file name - used as index in the dataframe
                     REACTION_INDEX = int(''.join(filter(lambda i: i.isdigit(), FILE_1)))
+
+                    #save dictionary in a .pkl file
                     DF = pd.DataFrame(DICT_NOOPT, index=[REACTION_INDEX])
                     DF.to_pickle(str(REACTION_INDEX)+'_noopt.pkl')
+
+                    #load the dataframes to save data for successful and failed runs
                     SUCCESS_DATAFRAME = pd.read_pickle('../'+SUCCESS_PKL)
                     FAIL_DATAFRAME = pd.read_pickle('../'+FAIL_PKL)
+
+                    # check if TS found if not do constraind optimization 
                     if TS_FOUND1 or TS_FOUND2:
                         SUCCESS_DATAFRAME = pd.read_pickle('../'+SUCCESS_PKL)
                         SUCCESS_DATAFRAME = SUCCESS_DATAFRAME.append(DF,
                                                                      sort=False)
                         SUCCESS_DATAFRAME.to_pickle('../'+SUCCESS_PKL)
-                    else:
-                        _, SP_MAX_XYZ = os.path.split(SP_MAX_XYZ)
-                        os.chdir('ts_test')
-                        CONSTRAINED_OPT_OUT, JOB_ID = \
-                                make_gaussian_constrained_opt(SP_MAX_XYZ,
-                                                              BOND_PAIRS_CHANGED, METHOD)
-                        wait_for_jobs_to_finish(JOB_ID)
-                        CONSTRAINED_OPT_XYZ, CONSTRAINED_OPT_ENERGY = \
-                            extract_optimized_structure(CONSTRAINED_OPT_OUT, N_ATOMS, ATOM_NUMBERS[0])
-                        DICT.update({"Constrained opt [Hartree]" : CONSTRAINED_OPT_ENERGY})
-                        os.chdir('../')
-                        CONSTRAINED_OPT_XYZ = 'ts_test/'+CONSTRAINED_OPT_XYZ
-                        DICT_OPT, TS_FOUND1, TS_FOUND2 = \
-                        find_ts_structure(CONSTRAINED_OPT_XYZ, FILE_1, FILE_2, BOND_PAIRS_CHANGED,
-                                          METHOD, N_ATOMS, ATOM_NUMBERS)
-                        os.chdir('../')
-                        DICT_OPT.update(DICT)
-                        print(DICT_OPT)
-                        DF2 = pd.DataFrame(DICT_OPT, index=[REACTION_INDEX])
-                        DF2.to_pickle(str(REACTION_INDEX)+'_opt.pkl')
-                        if TS_FOUND1 or TS_FOUND2:
-                            SUCCESS_DATAFRAME = pd.read_pickle('../'+SUCCESS_PKL)
-                            SUCCESS_DATAFRAME = SUCCESS_DATAFRAME.append(DF2, sort=False)
-                            SUCCESS_DATAFRAME.to_pickle('../'+SUCCESS_PKL)
-                        else:
-                            FAIL_DATAFRAME = pd.read_pickle('../'+FAIL_PKL)
-                            FAIL_DATAFRAME = FAIL_DATAFRAME.append([DF, DF2], sort=False)
-                            FAIL_DATAFRAME.to_pickle('../'+FAIL_PKL)
+
+                        #terminate program if TS found
+                        sys.exit()
+
+                    #Do constrained optimization on the SP max structure
+                    _, SP_MAX_XYZ = os.path.split(SP_MAX_XYZ)
+                    os.chdir('ts_test')
+                    CONSTRAINED_OPT_OUT, JOB_ID = \
+                            make_gaussian_constrained_opt(SP_MAX_XYZ,
+                                                          BOND_PAIRS_CHANGED, METHOD)
+                    wait_for_jobs_to_finish(JOB_ID)
+                    CONSTRAINED_OPT_XYZ, CONSTRAINED_OPT_ENERGY = \
+                        extract_optimized_structure(CONSTRAINED_OPT_OUT, N_ATOMS, ATOM_NUMBERS[0])
+                    DICT.update({"Constrained opt [Hartree]" : CONSTRAINED_OPT_ENERGY})
+                    os.chdir('../')
+                    CONSTRAINED_OPT_XYZ = 'ts_test/'+CONSTRAINED_OPT_XYZ
+
+                    #try TS search again on constrained opt save results in new dictionary
+                    DICT_OPT, TS_FOUND1, TS_FOUND2 = \
+                    find_ts_structure(CONSTRAINED_OPT_XYZ, FILE_1, FILE_2, BOND_PAIRS_CHANGED,
+                                      METHOD, N_ATOMS, ATOM_NUMBERS)
+                    os.chdir('../')
+                    DICT_OPT.update(DICT)
+                    print(DICT_OPT)
+
+                    #save dataframe for the constrained optimixation in .pkl
+                    DF2 = pd.DataFrame(DICT_OPT, index=[REACTION_INDEX])
+                    DF2.to_pickle(str(REACTION_INDEX)+'_opt.pkl')
+
+                    # check again if TS found
+                    if TS_FOUND1 or TS_FOUND2:
+                        SUCCESS_DATAFRAME = pd.read_pickle('../'+SUCCESS_PKL)
+                        SUCCESS_DATAFRAME = SUCCESS_DATAFRAME.append(DF2, sort=False)
+                        SUCCESS_DATAFRAME.to_pickle('../'+SUCCESS_PKL)
+
+                        #exit if TS found else save results for the failed attempts
+                        sys.exit()
+
+                    #if TS not found save failed attempts for both tries in dataframe
+                    FAIL_DATAFRAME = pd.read_pickle('../'+FAIL_PKL)
+                    FAIL_DATAFRAME = FAIL_DATAFRAME.append([DF, DF2], sort=False)
+                    FAIL_DATAFRAME.to_pickle('../'+FAIL_PKL)
