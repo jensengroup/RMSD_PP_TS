@@ -1,0 +1,469 @@
+[False, False, False]
+trying again
+2
+[False, False, False]
+trying again
+2
+[False, True, True]
+3
+[[1, 6], [1, 10], [3, 6], [3, 10]]
+Max DFT energy from sp interpolation = -164.045116224
+{'ALP [1/a0]': '0.300', 'k_push': 0.015, 'k_pull': -0.03, 'xTB max [Hartree]': -12.369988029933, 'DFT SP Max [Hartree]': -164.045116224, 'DFT + xTB index same': False, 'index dif': 6}
+B H
+Bond activity for  [1, 6]  = 1.1297337662384044
+bond not active
+B H
+Bond activity for  [1, 10]  = 2.0436296388468747
+bond not active
+B H
+Bond activity for  [3, 6]  = 1.382473834689118
+bond active
+B H
+Bond activity for  [3, 10]  = 1.130803288646186
+bond not active
+[False, False, True, False]
+Number of imaginary frequencies = 5
+transition: 1
+[1, 6] 0.028608249138259267
+Vibration not along bond
+[1, 10] -0.12775851442422564
+Vibration not along bond
+[3, 6] -0.04465781324229853
+Vibration not along bond
+[3, 10] 0.011544085132550595
+Vibration not along bond
+transition: 2
+[1, 6] -0.020188236459630027
+Vibration not along bond
+[1, 10] 0.14689355795388362
+Vibration not along bond
+[3, 6] 0.054609724582369686
+Vibration not along bond
+[3, 10] -0.012419412511577257
+Vibration not along bond
+transition: 3
+[1, 6] 0.03417815346964084
+Vibration not along bond
+[1, 10] -0.5206804556559904
+Vibration along the bond
+[3, 6] -0.04263747371156669
+Vibration not along bond
+[3, 10] 0.017817027731533246
+Vibration not along bond
+transition: 4
+[1, 6] 0.006536645040689577
+Vibration not along bond
+[1, 10] -0.06769466461519655
+Vibration not along bond
+[3, 6] -0.02028209560931621
+Vibration not along bond
+[3, 10] 0.006216682045314906
+Vibration not along bond
+transition: 5
+[1, 6] -0.01424845735252464
+Vibration not along bond
+[1, 10] 0.09748274052054229
+Vibration not along bond
+[3, 6] 0.04955685155096083
+Vibration not along bond
+[3, 10] -0.002719059521558327
+Vibration not along bond
+Lowest imaginary frequency active along:               0 bonds
+optimized energy (path_point_7_ts.out) = -164.078746808
+Number of imaginary frequencies = 1
+transition: 1
+[1, 6] 0.042701819979645755
+Vibration not along bond
+[1, 10] -0.0850195227495493
+Vibration not along bond
+[3, 6] -0.0850195035478169
+Vibration not along bond
+[3, 10] 0.04270180945768882
+Vibration not along bond
+Lowest imaginary frequency active along:               0 bonds
+B H
+Bond activity for  [1, 6]  = 1.2272526715002583
+bond active
+B H
+Bond activity for  [1, 10]  = 1.3049975143160046
+bond active
+B H
+Bond activity for  [3, 6]  = 1.3049975143160046
+bond active
+B H
+Bond activity for  [3, 10]  = 1.2272526715002583
+bond active
+[True, True, True, True]
+checking fast ts check:
+optimized energy (path_point_7_ts_fast_forward.out) = -164.079201197
+optimized energy (path_point_7_ts_fast_reverse.out) = -164.079200954
+[[ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0  0  0  0  0 -1  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0 -1  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]]
+[[ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0 -1  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0  0  0  0  0 -1  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]]
+[[ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0 -1  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0  0  0  0  0 -1  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]]
+[[ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0  0  0  0  0 -1  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0 -1  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]]
+damn
+optimized energy (path_point_7_ts_forward_irc.out) = -164.078747308
+optimized energy (path_point_7_ts_reverse_irc.out) = -164.078747315
+Checking IRC endpoints:
+optimized energy (path_point_7_ts_forward_irc.out) = -164.078747308
+optimized energy (path_point_7_ts_reverse_irc.out) = -164.078747315
+[[ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0  0  0  0  0 -1  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0 -1  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]]
+[[ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0 -1  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0  0  0  0  0 -1  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]]
+[[ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0 -1  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0  0  0  0  0 -1  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]]
+[[ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0  0  0  0  0 -1  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0 -1  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]]
+damn
+checking real IRC:
+optimized energy (path_point_7_ts_forward_irc_opt.out) = -164.078747304
+optimized energy (path_point_7_ts_reverse_irc_opt.out) = -164.078747317
+optimized energy (path_point_7_ts_forward_irc_opt.out) = -164.078747304
+optimized energy (path_point_7_ts_reverse_irc_opt.out) = -164.078747317
+[[ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0  0  0  0  0 -1  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0 -1  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]]
+[[ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0 -1  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0  0  0  0  0 -1  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]]
+[[ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0 -1  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0  0  0  0  0 -1  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]]
+[[ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0  0  0  0  0 -1  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0 -1  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]]
+damn
+{'Bond active in guess': True, 'N_imag_guess': 5, '# of bonds along lowest vibration in guess': 0, 'TS Energy [Hartree]': '-164.078746808', 'N_imag_ts': 1, '# of bonds along lowest vibration in TS': 0, 'Bond active in ts': True, 'Fast test': False, 'IRC endpoint test': False, 'IRC check': False, 'ALP [1/a0]': '0.300', 'k_push': 0.015, 'k_pull': -0.03, 'xTB max [Hartree]': -12.369988029933, 'DFT SP Max [Hartree]': -164.045116224, 'DFT + xTB index same': False, 'index dif': 6}
+optimized energy (path_point_7_opt.out) = -164.075772023
+B H
+Bond activity for  [1, 6]  = 1.129735371694168
+bond not active
+B H
+Bond activity for  [1, 10]  = 2.0436233969701085
+bond not active
+B H
+Bond activity for  [3, 6]  = 1.3824754931755727
+bond active
+B H
+Bond activity for  [3, 10]  = 1.1308079395368675
+bond not active
+[False, False, True, False]
+file already there
+Number of imaginary frequencies = 1
+transition: 1
+[1, 6] -0.024229680153040667
+Vibration not along bond
+[1, 10] 0.4868299692450736
+Vibration along the bond
+[3, 6] 0.08027827230328752
+Vibration not along bond
+[3, 10] -0.018709544730039766
+Vibration not along bond
+Lowest imaginary frequency active along:               1 bonds
+optimized energy (path_point_7_opt_ts.out) = -164.078245642
+Number of imaginary frequencies = 1
+transition: 1
+[1, 6] 0.07148738309740305
+Vibration not along bond
+[1, 10] -0.3997235288134759
+Vibration along the bond
+[3, 6] -0.3997302249366353
+Vibration along the bond
+[3, 10] 0.07148665589250655
+Vibration not along bond
+Lowest imaginary frequency active along:               2 bonds
+B H
+Bond activity for  [1, 6]  = 1.171731289104351
+bond not active
+B H
+Bond activity for  [1, 10]  = 1.4922453516661534
+bond active
+B H
+Bond activity for  [3, 6]  = 1.4931730525504872
+bond active
+B H
+Bond activity for  [3, 10]  = 1.171801335083522
+bond not active
+[False, True, True, False]
+checking fast ts check:
+optimized energy (path_point_7_opt_ts_fast_forward.out) = -164.096519695
+optimized energy (path_point_7_opt_ts_fast_reverse.out) = -164.079201247
+[[0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]]
+[[ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0 -1  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0  0  0  0  0 -1  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]]
+[[ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0 -1  0  0  0  1  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  1  0  0  0 -1  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  1  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  1  0 -1  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]]
+[[ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0  0  0  0  0 -1  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0 -1  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]]
+damn
+optimized energy (path_point_7_opt_ts_forward_irc.out) = -164.078760203
+optimized energy (path_point_7_opt_ts_reverse_irc.out) = -164.095469108
+Checking IRC endpoints:
+optimized energy (path_point_7_opt_ts_forward_irc.out) = -164.078760203
+optimized energy (path_point_7_opt_ts_reverse_irc.out) = -164.095469108
+[[ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0  0  0  0  0 -1  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0 -1  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]]
+[[ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0 -1  0  0  0  1  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  1  0  0  0 -1  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  1  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  1  0 -1  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]]
+[[ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0 -1  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0  0  0  0  0 -1  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]]
+[[0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]]
+damn
+checking real IRC:
+optimized energy (path_point_7_opt_ts_forward_irc_opt.out) = -164.079201226
+optimized energy (path_point_7_opt_ts_reverse_irc_opt.out) = -164.100890394
+optimized energy (path_point_7_opt_ts_forward_irc_opt.out) = -164.079201226
+optimized energy (path_point_7_opt_ts_reverse_irc_opt.out) = -164.100890394
+[[ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0  0  0  0  0 -1  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0 -1  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]]
+[[ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0 -1  0  0  0  1  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  1  0  0  0 -1  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  1  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  1  0 -1  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]]
+[[ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0 -1  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0  0  0  0  0 -1  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0 -1  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0  0  0  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0]]
+[[0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]]
+damn
+{'Bond active in guess': True, 'N_imag_guess': 1, '# of bonds along lowest vibration in guess': 1, 'TS Energy [Hartree]': '-164.078245642', 'N_imag_ts': 1, '# of bonds along lowest vibration in TS': 2, 'Bond active in ts': True, 'Fast test': False, 'IRC endpoint test': False, 'IRC check': False, 'ALP [1/a0]': '0.300', 'k_push': 0.015, 'k_pull': -0.03, 'xTB max [Hartree]': -12.369988029933, 'DFT SP Max [Hartree]': -164.045116224, 'DFT + xTB index same': False, 'index dif': 6, 'Constrained opt [Hartree]': '-164.075772023'}

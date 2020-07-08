@@ -1,0 +1,8 @@
+ssh_askpass: exec(/usr/bin/ssh-askpass): No such file or directory
+Permission denied, please try again.
+ssh_askpass: exec(/usr/bin/ssh-askpass): No such file or directory
+Permission denied, please try again.
+ssh_askpass: exec(/usr/bin/ssh-askpass): No such file or directory
+Permission denied (publickey,password).
+/var/lib/slurm-llnl/slurmd/job1311812/slurm_script: line 76: syntax error near unexpected token `$runtime'
+/var/lib/slurm-llnl/slurmd/job1311812/slurm_script: line 76: `convertsecs($runtime)'

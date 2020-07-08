@@ -1,0 +1,24 @@
+#!/bin/sh
+#SBATCH --job-name=path_point_2_ts_reverse_irc_opt
+#SBATCH --cpus-per-task=4
+#SBATCH --ntasks=1
+#SBATCH --error=/home/mariaharris/github/RMSD_PP_TS/example/test_run/ts_test/path_point_2_ts_reverse_irc_opt\_%j.err
+#SBATCH --output=/home/mariaharris/github/RMSD_PP_TS/example/test_run/ts_test/path_point_2_ts_reverse_irc_opt\_%j.out
+#SBATCH --time=100:00:00
+#SBATCH --partition=shortcoms
+#SBATCH --no-requeue
+#SBATCH --mem=20GB
+
+# Create scratch folder
+mkdir /scratch/$SLURM_JOB_ID
+
+cd /home/mariaharris/github/RMSD_PP_TS/example/test_run/ts_test
+
+export GAUSS_SCRDIR=/scratch/$SLURM_JOB_ID
+export GAUSS_EXEDIR=/opt/gaussian/g16/legacy/g16
+
+srun /opt/gaussian/g16/legacy/g16/g16 < path_point_2_ts_reverse_irc_opt.com > path_point_2_ts_reverse_irc_opt.out
+
+# Remove scratch folder
+rm -rf /scratch/$SLURM_JOB_ID
+

@@ -1,0 +1,14 @@
+$path
+   nopt=100
+   anopt=3
+   kpush=
+   kpull=
+   alp=
+   product=
+$end
+$scc
+   temp=300
+$end
+$opt
+   optlevel=2
+$end

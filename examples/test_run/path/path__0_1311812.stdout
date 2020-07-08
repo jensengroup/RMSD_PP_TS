@@ -1,0 +1,27 @@
+0 Running on mnode006
+0 un-tar input files
+0 run gaussian
+path_point_0_sp.com
+path_point_12_sp.com
+path_point_11_sp.com
+path_point_10_sp.com
+path_point_13_sp.com
+path_point_15_sp.com
+path_point_14_sp.com
+path_point_16_sp.com
+path_point_19_sp.com
+path_point_18_sp.com
+path_point_17_sp.com
+path_point_1_sp.com
+path_point_20_sp.com
+path_point_2_sp.com
+path_point_3_sp.com
+path_point_4_sp.com
+path_point_5_sp.com
+path_point_6_sp.com
+path_point_7_sp.com
+path_point_8_sp.com
+path_point_9_sp.com
+313 tar output
+313 untar in /home/mariaharris/github/RMSD_PP_TS/example/test_run/path
+313 done

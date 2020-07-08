@@ -1,0 +1,14 @@
+$path
+   nopt=100
+   anopt=3
+   kpush=0.01
+   kpull=-0.02
+   alp=0.3
+   product=6r_rel.xyz
+$end
+$scc
+   temp=300
+$end
+$opt
+   optlevel=2
+$end

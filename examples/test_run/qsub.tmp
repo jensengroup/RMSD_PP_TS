@@ -1,0 +1,36 @@
+#!/bin/sh
+#SBATCH --job-name=1r_1p
+#SBATCH --cpus-per-task=1
+#SBATCH --ntasks=1
+#SBATCH --error=/home/mariaharris/github/RMSD_PP_TS/example/test_run//1r_1p\_%j.err
+#SBATCH --output=/home/mariaharris/github/RMSD_PP_TS/example/test_run//1r_1p\_%j.out
+#SBATCH --time=100:00:00
+#SBATCH --partition=mko
+#SBATCH --no-requeue
+
+cd 1r_1p
+# Create scratch folder
+mkdir /scratch/$SLURM_JOB_ID
+
+export XTBHOME=/opt/xtb/6.1/xtb-190527/bin
+
+
+export OMP_NUM_THREADS=1
+
+sed -i "s/kpush=/kpush=0.008/g" path.inp
+sed -i "s/kpull=/kpull=-0.02/g" path.inp
+sed -i "s/product=/product=1p.xyz/g" path.inp
+sed -i "s/alp=/alp=0.6/g" path.inp
+/opt/xtb/6.1/xtb-190527/bin/xtb 1r.xyz --path --input path.inp --gfn2 --chrg 0 > 1r_1p.out
+
+#mv xtbpath_1.xyz path_1r_1p_1.xyz
+#mv xtbpath_2.xyz path_1r_1p_2.xyz
+#mv xtbpath_3.xyz path_1r_1p_3.xyz
+#mv xtbpath.dat path_1r_1p.dat
+#mv *xyz ../
+#mv *dat ../
+cd ..
+
+# Remove scratch folder
+rm -rf /scratch/$SLURM_JOB_ID
+
